@@ -6,7 +6,6 @@ import {
   ActionIcon,
   Divider,
   Group,
-  Button,
   Card,
   Image,
   Text,
@@ -16,11 +15,12 @@ import {
 import {
   IconBook,
   IconHourglass,
-  IconPlus,
   IconUpload,
   IconUser,
 } from "@tabler/icons";
+import { useRouter } from "next/router";
 import { Layout } from "../../components/admin-layout";
+import { CreateCourse } from "../../components/create-course";
 
 const courses = [
   {
@@ -33,6 +33,7 @@ const courses = [
     hours: 4,
     lessons: 28,
     stage: "Beginner",
+    link: "/admin/courses/intro-to-technology"
   },
   {
     title: "Fundamentals of the Technical Interview",
@@ -44,6 +45,7 @@ const courses = [
     hours: 6,
     lessons: 28,
     stage: "Intermediate",
+    link: "/admin/courses/intro-to-technology"
   },
 ];
 
@@ -62,7 +64,7 @@ const useStyles = createStyles((theme) => ({
     "&:hover": {
       boxShadow: theme.shadows.sm,
       transform: "scale(1.01)",
-      transition: "transform ease-in-out 0.3s" 
+      transition: "transform ease-in-out 0.3s"
     }
   },
 
@@ -70,9 +72,8 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderBottom: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
-    }`,
+    borderBottom: `1px solid ${theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
+      }`,
   },
 
   label: {
@@ -87,12 +88,10 @@ const useStyles = createStyles((theme) => ({
   section: {
     padding: theme.spacing.md,
     color: theme.colors.gray[6],
-    borderTop: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
-    }`,
-    borderBottom: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
-    }`,
+    borderTop: `1px solid ${theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
+      }`,
+    borderBottom: `1px solid ${theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
+      }`,
   },
 
   icon: {
@@ -106,21 +105,33 @@ const useStyles = createStyles((theme) => ({
 
 export default function Courses() {
   const { classes } = useStyles();
+  const router = useRouter()
+
+  const handleCardClick = (href: string) => {
+    router.push(href);
+  }
+
   return (
     <Layout>
       <Group>
         <Title order={2}>Courses</Title>
         <div style={{ flex: 1 }} />
-        <Button leftIcon={<IconPlus />}>New Course</Button>
+        <CreateCourse />
       </Group>
       <Divider my="xl" />
-      <SimpleGrid cols={3}>
+      <SimpleGrid cols={3}
+        breakpoints={[
+          { maxWidth: 980, cols: 2, spacing: 'md' },
+          { maxWidth: 755, cols: 1, spacing: 'sm' },
+        ]}
+      >
         {courses.map((course) => (
           <Card
             className={classes.card}
             key={course.title}
             withBorder
             radius="md"
+            onClick={() => handleCardClick(course.link)}
           >
             <Card.Section className={classes.imageSection}>
               <Image alt={course.title} src={course.image} />
